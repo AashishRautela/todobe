@@ -5,6 +5,10 @@ const todoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description:{
+    type:String,
+    required:true
+  }
 }, { timestamps: true });
 
 export default mongoose.model("Todo", todoSchema);

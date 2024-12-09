@@ -2,22 +2,22 @@ import Todo from "../models/todo.js";
 
 export const createTodo = async (req, res, next) => {
     try {
-        const { title } = req.body;
+        const { title, description } = req.body;
 
-        if (!title) {
+        if (!title || !description) {
             return res.status(400).send({
                 success: false,
-                message: "Title is required."
+                message: "Title and description are required."
             });
         }
 
-        const todo = new Todo({ title });
+        const todo = new Todo({ title, description });
         await todo.save();
 
         if (todo) {
             return res.status(201).send({
                 success: true,
-                message: "Todo created successfully",
+                message: "Todo created successfully.",
                 data: todo
             });
         } else {
@@ -33,21 +33,20 @@ export const createTodo = async (req, res, next) => {
     }
 };
 
-
 export const editTodo = async (req, res, next) => {
     try {
-        const { title, _id } = req.body;
+        const { title, description, _id } = req.body;
 
-        if (!title) {
+        if (!title || !description) {
             return res.status(400).send({
                 success: false,
-                message: "Title is required."
+                message: "Title and description are required."
             });
         }
 
         const updatedTodo = await Todo.findByIdAndUpdate(
-            _id, 
-            { title }, 
+            _id,
+            { title, description },
             { new: true, runValidators: true }
         );
 
@@ -64,7 +63,6 @@ export const editTodo = async (req, res, next) => {
             data: updatedTodo
         });
     } catch (error) {
-        console.error(error);
         return res.status(500).send({
             success: false,
             message: "Server error. Please try again."
@@ -98,7 +96,6 @@ export const deleteTodo = async (req, res, next) => {
             data: deletedTodo
         });
     } catch (error) {
-        console.error(error);
         return res.status(500).send({
             success: false,
             message: "Server error. Please try again."
@@ -116,11 +113,9 @@ export const getAllTodos = async (req, res, next) => {
             data: todos
         });
     } catch (error) {
-        console.error(error);
         return res.status(500).send({
             success: false,
             message: "Server error. Please try again."
         });
     }
 };
-
